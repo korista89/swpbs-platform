@@ -863,4 +863,12 @@ class Tier3Module {
       UIManager.showNotification(`${studentName}의 진척도를 불러왔습니다.`, 'success');
     }
   }
+
+  static attachEventListeners() {
+    // Event listeners are attached via onclick in HTML
+    console.log('✅ Tier3Module event listeners attached');
+  }
 }
+
+// Make module globally accessible
+window.Tier3Module = Tier3Module;

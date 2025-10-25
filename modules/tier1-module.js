@@ -583,4 +583,12 @@ class Tier1Module {
   static recordMinor() {
     UIManager.showNotification('경미사건 기록 기능이 곧 제공됩니다.', 'info');
   }
+
+  static attachEventListeners() {
+    // Event listeners are attached via onclick in HTML
+    console.log('✅ Tier1Module event listeners attached');
+  }
 }
+
+// Make module globally accessible
+window.Tier1Module = Tier1Module;

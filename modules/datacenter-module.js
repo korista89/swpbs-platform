@@ -537,4 +537,12 @@ class DataCenterModule {
   static exportForEdu() {
     UIManager.showNotification('교육청 형식으로 내보내기 기능이 곧 제공됩니다.', 'info');
   }
+
+  static attachEventListeners() {
+    // Event listeners are attached via onclick in HTML
+    console.log('✅ DataCenterModule event listeners attached');
+  }
 }
+
+// Make module globally accessible
+window.DataCenterModule = DataCenterModule;

@@ -711,4 +711,12 @@ class Tier2Module {
       });
     }, 100);
   }
+
+  static attachEventListeners() {
+    // Event listeners are attached via onclick in HTML
+    console.log('✅ Tier2Module event listeners attached');
+  }
 }
+
+// Make module globally accessible
+window.Tier2Module = Tier2Module;

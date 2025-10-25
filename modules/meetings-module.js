@@ -538,4 +538,12 @@ class MeetingsModule {
   static addAction() {
     UIManager.showNotification('액션 아이템 추가 기능이 곧 제공됩니다.', 'info');
   }
+
+  static attachEventListeners() {
+    // Event listeners are attached via onclick in HTML
+    console.log('✅ MeetingsModule event listeners attached');
+  }
 }
+
+// Make module globally accessible
+window.MeetingsModule = MeetingsModule;
