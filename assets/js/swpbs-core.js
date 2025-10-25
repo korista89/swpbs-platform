@@ -504,14 +504,6 @@ class ChartManager {
 
 // ===== UI 관리자 =====
 class UIManager {
-  // 모듈 전환 - index.html의 showModule 함수가 실제 구현을 담당
-  static showModule(moduleName) {
-    console.log('UIManager.showModule is deprecated - use global showModule() instead');
-    if (typeof window.showModule === 'function') {
-      window.showModule(moduleName);
-    }
-  }
-
   // 대시보드 업데이트
   static updateDashboard() {
     const events = SWPBS.data.odrEvents;
@@ -612,9 +604,7 @@ class UIManager {
 }
 
 // ===== 전역 함수 =====
-function showModule(moduleName) {
-  UIManager.showModule(moduleName);
-}
+// Note: showModule() is defined in index.html to handle actual module switching
 
 function selectRole(role) {
   UIManager.selectRole(role);
