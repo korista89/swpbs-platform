@@ -3,6 +3,10 @@
 // ==========================================================================
 
 class DataCenterModule {
+  static initialize() {
+    console.log('DataCenterModule initialized');
+  }
+
   static render() {
     const container = document.getElementById('datacenter');
     if (!container) return;

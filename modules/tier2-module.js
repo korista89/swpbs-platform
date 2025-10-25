@@ -3,6 +3,10 @@
 // =====================================================
 
 class Tier2Module {
+  static initialize() {
+    console.log('Tier2Module initialized');
+  }
+
   static render() {
     const container = document.getElementById('tier2');
     if (!container) return;

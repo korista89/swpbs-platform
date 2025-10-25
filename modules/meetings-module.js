@@ -3,6 +3,10 @@
 // =================================================================
 
 class MeetingsModule {
+  static initialize() {
+    console.log('MeetingsModule initialized');
+  }
+
   static render() {
     const container = document.getElementById('meetings');
     if (!container) return;
