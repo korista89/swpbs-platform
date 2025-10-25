@@ -481,18 +481,75 @@
   <script>
     // Initialize modules when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize onboarding wizard first
-      OnboardingWizard.initialize();
+      console.log('🚀 Initializing SW-PBS Platform...');
 
-      // Initialize all modules
-      Tier1Module.initialize();
-      Tier2Module.initialize();
-      Tier3Module.initialize();
-      DataCenterModule.initialize();
-      MeetingsModule.initialize();
+      // Check if core modules are loaded
+      const requiredModules = [
+        'SWPBS',
+        'DataManager',
+        'ChartManager',
+        'UIManager',
+        'AnalyticsEngine',
+        'SampleDataGenerator',
+        'OnboardingWizard',
+        'Tier1Module',
+        'Tier2Module',
+        'Tier3Module',
+        'DataCenterModule',
+        'MeetingsModule'
+      ];
 
-      // Load sample data for demonstration
-      loadSampleData();
+      const missingModules = requiredModules.filter(mod => typeof window[mod] === 'undefined');
+
+      if (missingModules.length > 0) {
+        console.error('❌ Missing modules:', missingModules);
+        alert('일부 모듈을 로드하지 못했습니다. 페이지를 새로고침해주세요.\n\n누락된 모듈: ' + missingModules.join(', '));
+        return;
+      }
+
+      console.log('✅ All modules loaded successfully');
+
+      try {
+        // Initialize onboarding wizard first
+        if (typeof OnboardingWizard !== 'undefined') {
+          OnboardingWizard.initialize();
+          console.log('✅ Onboarding initialized');
+        }
+
+        // Initialize all modules
+        if (typeof Tier1Module !== 'undefined') {
+          Tier1Module.initialize();
+          console.log('✅ Tier1Module initialized');
+        }
+
+        if (typeof Tier2Module !== 'undefined') {
+          Tier2Module.initialize();
+          console.log('✅ Tier2Module initialized');
+        }
+
+        if (typeof Tier3Module !== 'undefined') {
+          Tier3Module.initialize();
+          console.log('✅ Tier3Module initialized');
+        }
+
+        if (typeof DataCenterModule !== 'undefined') {
+          DataCenterModule.initialize();
+          console.log('✅ DataCenterModule initialized');
+        }
+
+        if (typeof MeetingsModule !== 'undefined') {
+          MeetingsModule.initialize();
+          console.log('✅ MeetingsModule initialized');
+        }
+
+        // Load sample data for demonstration
+        loadSampleData();
+
+        console.log('🎉 SW-PBS Platform initialized successfully!');
+      } catch (error) {
+        console.error('❌ Initialization error:', error);
+        alert('플랫폼 초기화 중 오류가 발생했습니다:\n\n' + error.message + '\n\n페이지를 새로고침해주세요.');
+      }
     });
 
     // Load sample data based on data1024.csv structure
@@ -649,6 +706,8 @@
 
     // Update showModule to render module content
     function showModule(moduleId) {
+      console.log('🔄 Switching to module:', moduleId);
+
       // Hide all modules
       document.querySelectorAll('.module-section').forEach(section => {
         section.classList.remove('active');
@@ -656,39 +715,96 @@
 
       // Show selected module
       const moduleSection = document.getElementById(moduleId);
-      if (moduleSection) {
-        moduleSection.classList.add('active');
+      if (!moduleSection) {
+        console.error('❌ Module section not found:', moduleId);
+        return;
+      }
 
-        // Render module content
+      moduleSection.classList.add('active');
+
+      // Render module content
+      try {
         switch(moduleId) {
           case 'tier1':
+            if (typeof Tier1Module === 'undefined') {
+              throw new Error('Tier1Module not loaded');
+            }
             moduleSection.innerHTML = Tier1Module.render();
             Tier1Module.initializeCharts();
             Tier1Module.attachEventListeners();
+            console.log('✅ Tier 1 module rendered');
             break;
+
           case 'tier2':
+            if (typeof Tier2Module === 'undefined') {
+              throw new Error('Tier2Module not loaded');
+            }
             moduleSection.innerHTML = Tier2Module.render();
             Tier2Module.initializeCharts();
             Tier2Module.attachEventListeners();
+            console.log('✅ Tier 2 module rendered');
             break;
+
           case 'tier3':
+            if (typeof Tier3Module === 'undefined') {
+              throw new Error('Tier3Module not loaded');
+            }
             moduleSection.innerHTML = Tier3Module.render();
             Tier3Module.initializeCharts();
             Tier3Module.attachEventListeners();
+            console.log('✅ Tier 3 module rendered');
             break;
+
           case 'datacenter':
+            if (typeof DataCenterModule === 'undefined') {
+              throw new Error('DataCenterModule not loaded');
+            }
             moduleSection.innerHTML = DataCenterModule.render();
             DataCenterModule.attachEventListeners();
+            console.log('✅ DataCenter module rendered');
             break;
+
           case 'meetings':
+            if (typeof MeetingsModule === 'undefined') {
+              throw new Error('MeetingsModule not loaded');
+            }
             moduleSection.innerHTML = MeetingsModule.render();
             MeetingsModule.initializeCharts();
             MeetingsModule.attachEventListeners();
+            console.log('✅ Meetings module rendered');
             break;
+
           case 'help':
             moduleSection.innerHTML = renderHelpModule();
+            console.log('✅ Help module rendered');
             break;
+
+          case 'home':
+            console.log('✅ Home module (already rendered)');
+            break;
+
+          default:
+            console.warn('⚠️ Unknown module:', moduleId);
         }
+      } catch (error) {
+        console.error('❌ Error rendering module:', moduleId, error);
+        moduleSection.innerHTML = `
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">⚠️ 모듈 로드 오류</h3>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-danger">
+                <span>❌</span>
+                <div>
+                  <strong>모듈을 불러올 수 없습니다:</strong> ${moduleId}<br>
+                  <small>오류: ${error.message}</small><br>
+                  <small>페이지를 새로고침(F5)해보세요.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
       }
 
       // Update header nav
@@ -696,8 +812,10 @@
         item.classList.remove('active');
       });
 
-      // Update UI state
-      SWPBS.ui.currentModule = moduleId;
+      // Update UI state if SWPBS is available
+      if (typeof SWPBS !== 'undefined') {
+        SWPBS.ui.currentModule = moduleId;
+      }
     }
 
     // Update selectRole function
