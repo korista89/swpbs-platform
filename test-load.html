@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>SW-PBS Module Load Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <h1>Module Loading Test</h1>
+  <div id="results"></div>
+
+  <script src="assets/js/swpbs-core.js"></script>
+  <script src="assets/js/sample-data-generator.js"></script>
+  <script src="modules/onboarding-wizard.js"></script>
+  <script src="modules/tier1-module.js"></script>
+  <script src="modules/tier2-module.js"></script>
+  <script src="modules/tier3-module.js"></script>
+  <script src="modules/datacenter-module.js"></script>
+  <script src="modules/meetings-module.js"></script>
+
+  <script>
+    const results = document.getElementById('results');
+    const modules = [
+      'SWPBS',
+      'CSVParser',
+      'DataManager',
+      'AnalyticsEngine',
+      'ChartManager',
+      'UIManager',
+      'SampleDataGenerator',
+      'OnboardingWizard',
+      'Tier1Module',
+      'Tier2Module',
+      'Tier3Module',
+      'DataCenterModule',
+      'MeetingsModule'
+    ];
+
+    let html = '<h2>Module Load Status:</h2><ul>';
+    let allLoaded = true;
+
+    modules.forEach(mod => {
+      const exists = typeof window[mod] !== 'undefined';
+      const status = exists ? '✅' : '❌';
+      const color = exists ? 'green' : 'red';
+      html += `<li style="color: ${color}">${status} ${mod}</li>`;
+
+      if (!exists) {
+        console.error('❌ Missing:', mod);
+        allLoaded = false;
+      } else {
+        console.log('✅ Loaded:', mod);
+
+        // Test initialize method for modules
+        if (mod.includes('Module') || mod === 'OnboardingWizard') {
+          if (typeof window[mod].initialize === 'function') {
+            console.log('  ✅ Has initialize() method');
+            try {
+              window[mod].initialize();
+              console.log('  ✅ initialize() executed successfully');
+            } catch (e) {
+              console.error('  ❌ initialize() failed:', e.message);
+            }
+          } else {
+            console.error('  ❌ Missing initialize() method');
+          }
+        }
+      }
+    });
+
+    html += '</ul>';
+
+    if (allLoaded) {
+      html += '<h2 style="color: green;">✅ All modules loaded successfully!</h2>';
+
+      // Test sample data generation
+      html += '<h2>Testing Sample Data Generation:</h2>';
+      try {
+        const dataset = SampleDataGenerator.generateCompleteDataset();
+        html += `<p style="color: green;">✅ Generated ${dataset.odrData.length} ODR events</p>`;
+        html += `<p style="color: green;">✅ Generated ${dataset.praiseData.length} praise points</p>`;
+        html += `<p style="color: green;">✅ Generated ${dataset.cicoData.length} CICO records</p>`;
+        console.log('✅ Sample data generation successful');
+      } catch (e) {
+        html += `<p style="color: red;">❌ Sample data generation failed: ${e.message}</p>`;
+        console.error('❌ Sample data generation failed:', e);
+      }
+    } else {
+      html += '<h2 style="color: red;">❌ Some modules failed to load</h2>';
+    }
+
+    results.innerHTML = html;
+    console.log('=== Module Test Complete ===');
+  </script>
+</body>
+</html>
