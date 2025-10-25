@@ -718,3 +718,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('SW-PBS 플랫폼이 초기화되었습니다.');
 });
+
+// ===== 전역 객체로 노출 =====
+window.SWPBS = SWPBS;
+window.CSVParser = CSVParser;
+window.DataManager = DataManager;
+window.AnalyticsEngine = AnalyticsEngine;
+window.ChartManager = ChartManager;
+window.UIManager = UIManager;
