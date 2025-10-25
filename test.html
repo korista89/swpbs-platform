@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Module Test</title>
+</head>
+<body>
+  <h1>모듈 로딩 테스트</h1>
+  <div id="results"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="assets/js/swpbs-core.js"></script>
+  <script src="assets/js/sample-data-generator.js"></script>
+  <script src="modules/onboarding-wizard.js"></script>
+  <script src="modules/tier1-module.js"></script>
+  <script src="modules/tier2-module.js"></script>
+  <script src="modules/tier3-module.js"></script>
+  <script src="modules/datacenter-module.js"></script>
+  <script src="modules/meetings-module.js"></script>
+
+  <script>
+    const results = document.getElementById('results');
+    const modules = [
+      'SWPBS',
+      'CSVParser',
+      'DataManager',
+      'AnalyticsEngine',
+      'ChartManager',
+      'UIManager',
+      'SampleDataGenerator',
+      'OnboardingWizard',
+      'Tier1Module',
+      'Tier2Module',
+      'Tier3Module',
+      'DataCenterModule',
+      'MeetingsModule'
+    ];
+
+    let html = '<h2>모듈 로드 상태:</h2><ul>';
+
+    modules.forEach(mod => {
+      const exists = typeof window[mod] !== 'undefined';
+      const status = exists ? '✅' : '❌';
+      const color = exists ? 'green' : 'red';
+      html += `<li style="color: ${color}">${status} ${mod}</li>`;
+
+      if (!exists) {
+        console.error('❌ Missing:', mod);
+      } else {
+        console.log('✅ Loaded:', mod);
+      }
+    });
+
+    html += '</ul>';
+    results.innerHTML = html;
+
+    console.log('=== Module Test Complete ===');
+  </script>
+</body>
+</html>

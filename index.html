@@ -554,15 +554,6 @@
 
     // Load sample data based on data1024.csv structure
     function loadSampleData() {
-      // Check if data already exists in localStorage
-      const existingData = localStorage.getItem('swpbs_data');
-      if (existingData) {
-        console.log('📦 Loading existing data from localStorage');
-        DataManager.loadFromLocalStorage();
-        UIManager.updateDashboard();
-        return;
-      }
-
       console.log('🎲 Generating comprehensive sample data...');
 
       // Generate complete dataset using SampleDataGenerator
@@ -672,10 +663,35 @@
       // Save to localStorage
       DataManager.saveToLocalStorage();
 
-      // Update dashboard
-      UIManager.updateDashboard();
+      // Update dashboard with real data
+      updateHomeDashboard();
 
       console.log('✅ Sample data loaded successfully');
+    }
+
+    // Update home dashboard with actual data
+    function updateHomeDashboard() {
+      const odrCount = SWPBS.data.odrEvents.length;
+      const tier2Students = SWPBS.data.students.filter(s => s.tier === 'Tier 2').length;
+      const tier3Students = SWPBS.data.students.filter(s => s.tier === 'Tier 3').length;
+      const cicoCount = SWPBS.data.cicoRecords ? [...new Set(SWPBS.data.cicoRecords.map(r => r.studentName))].length : 0;
+      const tfiScore = SWPBS.data.tfiScores?.tier1?.total || 85;
+
+      // Update stat cards
+      const statCards = document.querySelectorAll('.dashboard-stats .stat-card');
+      if (statCards[0]) {
+        statCards[0].querySelector('.stat-value').textContent = odrCount;
+      }
+      if (statCards[1]) {
+        statCards[1].querySelector('.stat-value').textContent = tfiScore + '%';
+      }
+      if (statCards[2]) {
+        statCards[2].querySelector('.stat-value').textContent = tier2Students;
+        statCards[2].querySelector('.stat-trend').textContent = `CICO ${cicoCount}명`;
+      }
+      if (statCards[3]) {
+        statCards[3].querySelector('.stat-value').textContent = tier3Students;
+      }
     }
 
     // Global helper functions for quick actions

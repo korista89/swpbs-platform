@@ -8,10 +8,7 @@ class Tier1Module {
   }
 
   static render() {
-    const container = document.getElementById('tier1');
-    if (!container) return;
-
-    container.innerHTML = `
+    return `
       <h1><span class="tier-badge tier-badge-1">Tier 1</span> 보편적 지원</h1>
 
       <!-- 탭 네비게이션 -->
@@ -50,9 +47,6 @@ class Tier1Module {
         ${this.renderRewardsTab()}
       </div>
     `;
-
-    // 차트 초기화
-    this.initializeCharts();
   }
 
   static showTab(tabName) {
