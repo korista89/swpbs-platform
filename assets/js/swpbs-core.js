@@ -504,55 +504,11 @@ class ChartManager {
 
 // ===== UI 관리자 =====
 class UIManager {
-  // 모듈 전환
+  // 모듈 전환 - index.html의 showModule 함수가 실제 구현을 담당
   static showModule(moduleName) {
-    // 모든 모듈 숨김
-    document.querySelectorAll('.module-section').forEach(section => {
-      section.classList.remove('active');
-    });
-
-    // 선택된 모듈 표시
-    const module = document.getElementById(moduleName);
-    if (module) {
-      module.classList.add('active');
-      SWPBS.ui.currentModule = moduleName;
-    }
-
-    // 헤더 네비게이션 업데이트
-    document.querySelectorAll('.header-nav-item').forEach(item => {
-      item.classList.remove('active');
-    });
-    const activeNav = Array.from(document.querySelectorAll('.header-nav-item'))
-      .find(item => item.getAttribute('onclick')?.includes(moduleName));
-    if (activeNav) {
-      activeNav.classList.add('active');
-    }
-
-    // 모듈별 초기화
-    this.initializeModule(moduleName);
-  }
-
-  // 모듈 초기화
-  static initializeModule(moduleName) {
-    switch(moduleName) {
-      case 'home':
-        this.updateDashboard();
-        break;
-      case 'tier1':
-        Tier1Module.render();
-        break;
-      case 'tier2':
-        Tier2Module.render();
-        break;
-      case 'tier3':
-        Tier3Module.render();
-        break;
-      case 'datacenter':
-        DataCenterModule.render();
-        break;
-      case 'meetings':
-        MeetingsModule.render();
-        break;
+    console.log('UIManager.showModule is deprecated - use global showModule() instead');
+    if (typeof window.showModule === 'function') {
+      window.showModule(moduleName);
     }
   }
 
